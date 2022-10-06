@@ -30,17 +30,6 @@ namespace ArenaExpansion {
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener((object)this, new Action<CampaignGameStarter>(this.OnSessionLaunched));
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener((object)this, new Action<CampaignGameStarter>(this.OnGameLoaded));
             CampaignEvents.AfterMissionStarted.AddNonSerializedListener((object)this, new Action<IMission>(this.AfterMissionStarted));
-
-            CampaignEvents.GameMenuOpened.AddNonSerializedListener(this, OnMenuOpen);
-            CampaignEvents.ConversationEnded.AddNonSerializedListener(this, (CharacterObject co) =>
-            {
-                
-            });
-        }
-
-        private void OnMenuOpen(MenuCallbackArgs args)
-        {
-            // args contain the menuContext -> GameMenu -> Menu_ID
         }
 
         public override void SyncData(IDataStore dataStore) {
@@ -83,14 +72,12 @@ namespace ArenaExpansion {
 
         protected void AddPreDialogues(CampaignGameStarter campaignGameStarter) {
             // Pre-weapons list
-            // TODO: Remove () => { MWAX_game_menu_choose_weapon(null); } as this is a workaround for now
-            campaignGameStarter.AddPlayerLine("mwax_arena_choose_weapon", "arena_master_enter_practice_fight_confirm", "mwax_arena_weapons_list", "{=mwax_arena_1}I'll choose my gear.", (ConversationSentence.OnConditionDelegate)null, () => { MWAX_game_menu_choose_weapon(null); }, 200, (ConversationSentence.OnClickableConditionDelegate)null, (ConversationSentence.OnPersuasionOptionDelegate)null);
+            campaignGameStarter.AddPlayerLine("mwax_arena_choose_weapon", "arena_master_enter_practice_fight_confirm", "mwax_arena_weapons_list", "{=mwax_arena_1}I'll choose my gear.", (ConversationSentence.OnConditionDelegate)null, null, 200, (ConversationSentence.OnClickableConditionDelegate)null, (ConversationSentence.OnPersuasionOptionDelegate)null);
             campaignGameStarter.AddDialogLine("mwax_arena_choose_weapons_master_confirm", "mwax_arena_weapons_list", "mwax_arena_weapons_list", "{=mwax_arena_2}Alright, which weapon are you taking?", (ConversationSentence.OnConditionDelegate)null, (ConversationSentence.OnConsequenceDelegate)null, 100, (ConversationSentence.OnClickableConditionDelegate)null);
 
             // Post-match list
-            // TODO: Remove () => { MWAX_game_menu_choose_weapon(null); } as this is a workaround for now
             campaignGameStarter.AddPlayerLine("mwax_arena_rematch_previous", "arena_master_post_practice_fight_talk", "close_window", "{=mwax_arena_3}Yeah. I'll take my previous loadout.", new ConversationSentence.OnConditionDelegate(this.MWAX_conversation_post_fight), new ConversationSentence.OnConsequenceDelegate(this.MWAX_conversation_join_arena_with_previous_loadout), 200, (ConversationSentence.OnClickableConditionDelegate)null, (ConversationSentence.OnPersuasionOptionDelegate)null);
-            campaignGameStarter.AddPlayerLine("mwax_arena_rematch_new", "arena_master_post_practice_fight_talk", "mwax_arena_weapons_list", "{=mwax_arena_4}Sure. I'll take a new loadout.", new ConversationSentence.OnConditionDelegate(this.MWAX_conversation_post_fight), () => { MWAX_game_menu_choose_weapon(null); }, 200, (ConversationSentence.OnClickableConditionDelegate)null, (ConversationSentence.OnPersuasionOptionDelegate)null);
+            campaignGameStarter.AddPlayerLine("mwax_arena_rematch_new", "arena_master_post_practice_fight_talk", "mwax_arena_weapons_list", "{=mwax_arena_4}Sure. I'll take a new loadout.", new ConversationSentence.OnConditionDelegate(this.MWAX_conversation_post_fight), null, 200, (ConversationSentence.OnClickableConditionDelegate)null, (ConversationSentence.OnPersuasionOptionDelegate)null);
         }
 
         protected void AddLoadoutDialogues(CampaignGameStarter campaignGameStarter, Settlement settlement) {
